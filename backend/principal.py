@@ -94,7 +94,7 @@ async def chat_mensagem(request: Request, message_request: MessageRequest):
 			return {**result, "author": True}
 
 	initial_response = ask_llama(message)
-	return {"message": initial_response, "author": True}
+	return {"message": "Não foi possível entender sua mensagem. Tente por exemplo: Criar um card", "author": True}
 
 @app.post("/chat_audio/")
 async def chat_audio(file: UploadFile = File(...)):
@@ -126,4 +126,4 @@ async def chat_audio(file: UploadFile = File(...)):
 			result = await create_trello_card(card_info)
 			return {**result, "author": True}
 
-	return {"message": transcript['text'], "author": True}
+	return {"message": "Não foi possível entender sua mensagem. Tente por exemplo: Criar um card", "author": True}
