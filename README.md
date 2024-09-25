@@ -36,9 +36,11 @@ Para iniciá-lo, siga os passos abaixo:
 ```bash
 # Instalar as dependências
 $ yarn
+$ pip install fastapi uvicorn requests transformers torch torchvision torchaudio
 
 # Iniciar o projeto
 $ yarn dev
+$ uvicorn principal:app --reload
 ```
 
 O app estará disponível no seu browser pelo endereço http://localhost:3000.
