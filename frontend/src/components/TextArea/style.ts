@@ -19,8 +19,6 @@ export const TextInput = styled.input `
     &::placeholder {
         color: #AAAAAA;
     }
-    
-    
 `;
 
 export const ContainerInput = styled.div `
@@ -31,7 +29,7 @@ export const ContainerInput = styled.div `
 
 export const Container = styled.div `
     width: 100%;
-    height: 77px;
+    height: 10%;
     background: #F5E2DC;
     display: flex;
     align-items: center;

@@ -2,11 +2,15 @@ import React, { useEffect, useRef, useState } from "react";
 import { Container, ContainerInput, TextInput } from "./style"
 import mic from "../../assets/mic.svg"
 import plus from "../../assets/plus.svg"
+import { IResponse } from "../../models/chatModel";
 
-const TextArea = () => {
+interface IProps {
+    setMessageList: React.Dispatch<React.SetStateAction<IResponse[]>>;
+}
+
+const TextArea = ({ setMessageList }: IProps) => {
     // const bottomRef = useRef()
     // const messageRef = useRef()
-    // const [messageList, setMessageList] = useState([])
 
     // const handleSubmit = () => {
     //     const message = messageRef.current?.value
@@ -29,14 +33,6 @@ const TextArea = () => {
     //     if(e.key === 'Enter')
     //     handleSubmit()
     // }
-
-    // const scrollDown = () => {
-    //     bottomRef.current.scrollIntoView({behavior: 'smooth'})
-    //   }
-
-    // useEffect(()=>{
-    //     scrollDown()
-    // }, [messageList])
 
     return(
         <Container>
