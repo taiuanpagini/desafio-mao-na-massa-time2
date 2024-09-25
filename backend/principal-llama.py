@@ -6,15 +6,10 @@ import os
 app = FastAPI()
 
 # Configuração do modelo LLaMA
-model_name = "meta-llama/Llama-3.1-8B-Instruct"
-tokenizer = AutoTokenizer.from_pretrained(model_name)
-model = AutoModelForCausalLM.from_pretrained(model_name)
-
-# Configurações do Trello
-TRELLO_KEY = ""
-TRELLO_TOKEN = ""
-TRELLO_BOARD_ID = ""
-TRELLO_LIST_ID = ""
+#model_name = "meta-llama/Meta-Llama-3.1-8B-Instruct"
+model_name = "meta-llama/Llama-2-7b"
+tokenizer = AutoTokenizer.from_pretrained(model_name, token="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")
+model = AutoModelForCausalLM.from_pretrained(model_name, token="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")
 
 # Armazenamento do estado da conversa (para fins de demonstração simples)
 conversation_states = {}
@@ -37,12 +32,12 @@ async def chat(request: Request, message_request: dict):
 			# Criar o card no Trello
 			url = "https://api.trello.com/1/cards"
 			query = {
-				'key': TRELLO_KEY,
-				'token': TRELLO_TOKEN,
-				'idList': TRELLO_LIST_ID,
-				'name': card_text,
+				'key': os.getenv("TRELLO_KEY"),
+				'token': os.getenv("TRELLO_TOKEN"),
+				'idList': os.getenv("TRELLO_LIST_ID"),
+				'name': os.getenv("card_text"),
 				'idLabels': ['66f2d6940b5765aab37c17a7'],
-				'desc': 'Card criado via chatbot'
+				'desc': "Card criado via chatbot"
 			}
 			trello_response = requests.post(url, params=query)
 
