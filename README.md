@@ -17,6 +17,7 @@ Um chatbot para criar cards no Trello.
 - Vite
 - StyledComponets
 - ReactJS
+- FastApi
 - Python
 - Llama - Meta
 - VS Code
