@@ -6,8 +6,8 @@ import os
 app = FastAPI()
 
 # Configuração do modelo LLaMA
-#model_name = "meta-llama/Meta-Llama-3.1-8B-Instruct"
-model_name = "meta-llama/Llama-2-7b"
+model_name = "meta-llama/Meta-Llama-3.1-8B-Instruct"
+#model_name = "meta-llama/Llama-2-7b"
 tokenizer = AutoTokenizer.from_pretrained(model_name, token="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")
 model = AutoModelForCausalLM.from_pretrained(model_name, token="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")
 
