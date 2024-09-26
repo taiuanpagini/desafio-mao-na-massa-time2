@@ -52,6 +52,30 @@ def ask_gpt(prompt):
         return "Atingido o limite de requisições."
 
 
+def comment_on_image(image_url):
+    response = openai.ChatCompletion.create(
+        model="gpt-4o-mini",
+        messages=[
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": "O que é essa imagem?"},
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": image_url,
+                            "detail": "low"
+                        },
+                    },
+                ],
+             }
+        ],
+        max_tokens=300,
+    )
+
+    return response.choices[0].message['content']
+
+
 def extract_card_info(message_str):
     message = json.loads(message_str)
 
@@ -90,30 +114,6 @@ async def create_trello_card(card_info_str):
         return {"message": "Card criado com sucesso no Trello!", "card_info": card_info}
     else:
         raise HTTPException(status_code=trello_response.status_code, detail="Erro ao criar card no Trello")
-
-
-def comment_on_image(image_url):
-    response = openai.ChatCompletion.create(
-        model="gpt-4o-mini",
-        messages=[
-            {
-                "role": "user",
-                "content": [
-                    {"type": "text", "text": "What’s in this image?"},
-                    {
-                        "type": "image_url",
-                        "image_url": {
-                            "url": image_url,
-                            "detail": "low"
-                        },
-                    },
-                ],
-             }
-        ],
-        max_tokens=300,
-    )
-
-    return response.choices[0].message['content']
 
 
 @app.post("/chat_mensagem/")
