@@ -20,7 +20,7 @@ const TextArea: React.FC<IProps> = ({ setIsLoading}) => {
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
 
-    const {updateMessageList, messageList} = useMessageContext();
+    const {updateMessageList} = useMessageContext();
     
     const chatService = new ChatService();
 
@@ -123,7 +123,7 @@ const TextArea: React.FC<IProps> = ({ setIsLoading}) => {
     return(
         <Container>
             <ContainerInput>
-                <div>{openModal && <ModalAttachment />}</div>
+                <div>{openModal && <ModalAttachment setOpenModal={setOpenModal} />}</div>
             <Plus src={openModal ? notPlus : plus} onClick={() => handleOpenModal()}/>
             <TextInput type="text"
                 value={inputText}
