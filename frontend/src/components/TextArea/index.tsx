@@ -111,10 +111,8 @@ const TextArea: React.FC<IProps> = ({ setIsLoading}) => {
         formData.append('file', chunk);
         console.log("teste", chunk);
         console.log("teste form", formData);
-
-        var files = new File([chunk], "file");
         try {
-            await chatService.createCardAudio(files).then((response) => {
+            await chatService.createCardAudio(formData).then((response) => {
                 updateMessageList(response?.data.author || true, response?.data.message || "Error backend");
             });
         } catch {
