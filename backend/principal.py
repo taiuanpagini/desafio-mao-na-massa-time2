@@ -1,5 +1,6 @@
 from fastapi import FastAPI, HTTPException, Request, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
 import requests
 import openai
 import re
@@ -9,6 +10,7 @@ import json
 
 from pydantic import BaseModel
 
+load_dotenv()
 
 class MessageRequest(BaseModel):
     message: str
@@ -24,12 +26,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-TRELLO_KEY = "d35935264e49ed8eaeb02ad5eca01a4f"
-TRELLO_TOKEN = "ATTA68f34d55d511797c7bf7803039ebf3f4e6bc1686b98b97d253bb57f4fe7cd9f7AE69119D"
-TRELLO_BOARD_ID = "PMNNzqLD"
-TRELLO_LIST_ID = "66f2d6940b5765aab37c1783"
+TRELLO_KEY = os.getenv("TRELLO_KEY")
+TRELLO_TOKEN = os.getenv("TRELLO_TOKEN")
+TRELLO_BOARD_ID = os.getenv("TRELLO_BOARD_ID")
+TRELLO_LIST_ID = os.getenv("TRELLO_LIST_ID")
 
-OPENAI_API_KEY = "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"
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 openai.api_key = OPENAI_API_KEY
 
