@@ -24,7 +24,7 @@ const ModalAttachment: React.FC = () => {
         if (fileData) {
           const formData = new FormData();
           formData.append('file', fileData);
-          await chatService.createCardAudio(formData)
+          await chatService.createCardAudio(fileData)
         }
       };
 
