@@ -1,21 +1,18 @@
 from fastapi import FastAPI, HTTPException, Request, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
-from pydub import AudioSegment
-from tempfile import NamedTemporaryFile
 import requests
-import io
 import openai
 import re
-from unidecode import unidecode
 from datetime import datetime, timedelta
-import speech_recognition as sr
 import os
 import json
 
 from pydantic import BaseModel
 
+
 class MessageRequest(BaseModel):
-	message: str
+    message: str
+
 
 app = FastAPI()
 
@@ -27,122 +24,131 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-TRELLO_KEY = ""
-TRELLO_TOKEN = ""
-TRELLO_BOARD_ID = ""
-TRELLO_LIST_ID = ""
+TRELLO_KEY = "d35935264e49ed8eaeb02ad5eca01a4f"
+TRELLO_TOKEN = "ATTA68f34d55d511797c7bf7803039ebf3f4e6bc1686b98b97d253bb57f4fe7cd9f7AE69119D"
+TRELLO_BOARD_ID = "PMNNzqLD"
+TRELLO_LIST_ID = "66f2d6940b5765aab37c1783"
 
-OPENAI_API_KEY = ""
-#OPENAI_API_KEY = ""
+OPENAI_API_KEY = "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"
+
 openai.api_key = OPENAI_API_KEY
 
 conversation_states = {}
 
-def ask_llama(prompt):
-	try:
-		response = openai.ChatCompletion.create(
-			model="gpt-3.5-turbo",
-			messages=[{"role": "user", "content": prompt}],
-			max_tokens=100
-		)
-		return response.choices[0].message['content']
-	except openai.error.RateLimitError:
-		return "Atingido o limite de requisições."
+
+def ask_gpt(prompt):
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=100
+        )
+        return response.choices[0].message['content']
+    except openai.error.RateLimitError:
+        return "Atingido o limite de requisições."
+
 
 def extract_card_info(message_str):
-	message = json.loads(message_str)
-    
-	description = message.get("description", "")
+    message = json.loads(message_str)
 
-	match = re.search(r'(?:descricao|descrição)\s*(.*)', description, re.IGNORECASE)
-	
-	if match:
-			message["description"] = match.group(1).strip()
+    description = message.get("description", "")
 
-	return json.dumps(message, indent=2, ensure_ascii=False)
+    match = re.search(r'(?:descricao|descrição)\s*(.*)', description, re.IGNORECASE)
+
+    if match:
+        message["description"] = match.group(1).strip()
+
+    return json.dumps(message, indent=2, ensure_ascii=False)
+
 
 async def create_trello_card(card_info_str):
-	try:
-		card_info = json.loads(card_info_str)
-		print("card_info", card_info)
-	except json.JSONDecodeError:
-		raise HTTPException(status_code=400, detail="Erro na decodificação JSON. Verifique a entrada.")
+    try:
+        card_info = json.loads(card_info_str)
+        print("card_info", card_info)
+    except json.JSONDecodeError:
+        raise HTTPException(status_code=400, detail="Erro na decodificação JSON. Verifique a entrada.")
 
-	due_date = (datetime.now() + timedelta(weeks=1)).isoformat()
+    due_date = (datetime.now() + timedelta(weeks=1)).isoformat()
 
-	url = "https://api.trello.com/1/cards"
-	query = {
-			'key': TRELLO_KEY,
-			'token': TRELLO_TOKEN,
-			'idList': TRELLO_LIST_ID,
-			'name': card_info['title'],
-			'desc': card_info['description'],
-			'due': due_date
-	}
+    url = "https://api.trello.com/1/cards"
+    query = {
+        'key': TRELLO_KEY,
+        'token': TRELLO_TOKEN,
+        'idList': TRELLO_LIST_ID,
+        'name': card_info['title'],
+        'desc': card_info['description'],
+        'due': due_date
+    }
 
-	trello_response = requests.post(url, params=query)
+    trello_response = requests.post(url, params=query)
 
-	if trello_response.status_code == 200:
-		return {"message": "Card criado com sucesso no Trello!", "card_info": card_info}
-	else:
-			raise HTTPException(status_code=trello_response.status_code, detail="Erro ao criar card no Trello")
+    if trello_response.status_code == 200:
+        return {"message": "Card criado com sucesso no Trello!", "card_info": card_info}
+    else:
+        raise HTTPException(status_code=trello_response.status_code, detail="Erro ao criar card no Trello")
+
 
 @app.post("/chat_mensagem/")
 async def chat_mensagem(request: Request, message_request: MessageRequest):
-	user_id = request.client.host
-	message = message_request.message
+    user_id = request.client.host
+    message = message_request.message
 
-	if "titulo" in message or "título" in message or "descrição" in message or "descricao" in message:
-		response = ask_llama("transforme em json formatado com title e description na raiz do objeto ignorando palavra card " + message)
-		card_info = extract_card_info(response)
+    if "titulo" in message or "título" in message or "descrição" in message or "descricao" in message:
+        response = ask_gpt(
+            "transforme em json formatado com title e description na raiz do objeto ignorando palavra card " + message)
+        card_info = extract_card_info(response)
 
-		if card_info:
-			result = await create_trello_card(response)
-			return {**result, "author": True, "response": response}
+        if card_info:
+            result = await create_trello_card(response)
+            return {**result, "author": True, "response": response}
 
-		return {"message": "Não foi possível entender sua mensagem. Tente por exemplo: Criar um card com titulo Minha task e descrição Minha primeira task", "author": True, "response": response}
-	else:
-		response = ask_llama(message)
-		return {"message": response, "author": True}
+        return {
+            "message": "Não foi possível entender sua mensagem. Tente por exemplo: Criar um card com titulo Minha task e descrição Minha primeira task",
+            "author": True, "response": response}
+    else:
+        response = ask_gpt(message)
+        return {"message": response, "author": True}
 
-	return {"message": "Não foi possível entender sua mensagem. Tente por exemplo: Criar um card com titulo Minha task e descrição Minha primeira task", "author": True}
 
 @app.post("/chat_audio/")
 async def chat_audio(file: UploadFile = File(...)):
-	if not file.filename.endswith(('.wav', '.mp3', '.flac', '.ogg')):
-		raise HTTPException(status_code=400, detail="Formato de áudio não suportado.")
-	
-	try:
-		audio_bytes = await file.read()
+    if not file.filename.endswith(('.wav', '.mp3', '.flac', '.ogg')):
+        raise HTTPException(status_code=400, detail="Formato de áudio não suportado.")
 
-		temp_file_path = "temp_audio.ogg"
-		with open(temp_file_path, "wb") as temp_file:
-				temp_file.write(audio_bytes)
+    try:
+        audio_bytes = await file.read()
 
-		with open(temp_file_path, "rb") as audio_file:
-			transcript = openai.Audio.transcribe(
-				model="whisper-1",
-				file=audio_file
-			)
+        temp_file_path = "temp_audio.ogg"
+        with open(temp_file_path, "wb") as temp_file:
+            temp_file.write(audio_bytes)
 
-		response = ask_llama(transcript['text'])
+        with open(temp_file_path, "rb") as audio_file:
+            transcript = openai.Audio.transcribe(
+                model="whisper-1",
+                file=audio_file
+            )
 
-		os.remove(temp_file_path)
+        response = ask_gpt(transcript['text'])
 
-	except Exception as e:
-		raise HTTPException(status_code=500, detail=str(e))
-	
-	if "titulo" in transcript['text'] or "título" in transcript['text'] or "descrição" in transcript['text'] or "descricao" in transcript['text']:
-		response = ask_llama("transforme em json formatado com title e description na raiz do objeto ignorando palavra card " + transcript['text'])
-		card_info = extract_card_info(response)
+        os.remove(temp_file_path)
 
-		if card_info:
-			result = await create_trello_card(response)
-			return {**result, "author": True, "response": response}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
-		return {"message": "Não foi possível entender sua mensagem. Tente por exemplo: Criar um card com titulo Minha task e descrição Minha primeira task", "author": True, "response": response}
-	else:
-		response = ask_llama(transcript['text'])
-		return {"message": response, "author": True}
+    if "titulo" in transcript['text'] or "título" in transcript['text'] or "descrição" in transcript[
+        'text'] or "descricao" in transcript['text']:
+        response = ask_gpt(
+            "transforme em json formatado com title e description na raiz do objeto ignorando palavra card " +
+            transcript['text'])
+        card_info = extract_card_info(response)
 
-	return {"message": "Não foi possível entender sua mensagem. Tente por exemplo: Criar um card com titulo Minha task e descrição Minha primeira task", "author": True}
+        if card_info:
+            result = await create_trello_card(response)
+            return {**result, "author": True, "response": response}
+
+        return {
+            "message": "Não foi possível entender sua mensagem. Tente por exemplo: Criar um card com titulo Minha task e descrição Minha primeira task",
+            "author": True, "response": response}
+    else:
+        response = ask_gpt(transcript['text'])
+        return {"message": response, "author": True}

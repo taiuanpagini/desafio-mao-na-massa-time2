@@ -6,6 +6,7 @@ export const Container = styled.div `
   margin: 0;
   width: 100%;
   background: linear-gradient(180deg, #68009F 16.14%, #D2006F 73.17%, #FDC500 101.66%, #F9F3F2 123.17%);
+
 `;
 
 export const ContainerBackground = styled.div `
