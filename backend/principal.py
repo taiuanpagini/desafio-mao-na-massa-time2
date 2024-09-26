@@ -32,7 +32,7 @@ TRELLO_TOKEN = ""
 TRELLO_BOARD_ID = ""
 TRELLO_LIST_ID = ""
 
-OPENAI_API_KEY = ""
+OPENAI_API_KEY = "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"
 #OPENAI_API_KEY = ""
 openai.api_key = OPENAI_API_KEY
 
@@ -109,7 +109,7 @@ async def chat_mensagem(request: Request, message_request: MessageRequest):
 
 @app.post("/chat_audio/")
 async def chat_audio(file: UploadFile = File(...)):
-	if not file.filename.endswith(('.wav', '.mp3', '.flac', '.ogg')):
+	if not any(file.content_type.endswith(ext) for ext in ['audio/wav', 'audio/mpeg', 'audio/flac', 'audio/ogg']):
 		raise HTTPException(status_code=400, detail="Formato de áudio não suportado.")
 	
 	try:
