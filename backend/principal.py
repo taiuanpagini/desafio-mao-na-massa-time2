@@ -7,10 +7,12 @@ import re
 from datetime import datetime, timedelta
 import os
 import json
+from PIL import Image
 
 from pydantic import BaseModel
 
 load_dotenv()
+
 
 class MessageRequest(BaseModel):
     message: str
@@ -90,6 +92,30 @@ async def create_trello_card(card_info_str):
         raise HTTPException(status_code=trello_response.status_code, detail="Erro ao criar card no Trello")
 
 
+def comment_on_image(image_url):
+    response = openai.ChatCompletion.create(
+        model="gpt-4o-mini",
+        messages=[
+            {
+                "role": "user",
+                "content": [
+                    {"type": "text", "text": "What’s in this image?"},
+                    {
+                        "type": "image_url",
+                        "image_url": {
+                            "url": image_url,
+                            "detail": "low"
+                        },
+                    },
+                ],
+             }
+        ],
+        max_tokens=300,
+    )
+
+    return response.choices[0].message['content']
+
+
 @app.post("/chat_mensagem/")
 async def chat_mensagem(request: Request, message_request: MessageRequest):
     user_id = request.client.host
@@ -154,3 +180,33 @@ async def chat_audio(file: UploadFile = File(...)):
     else:
         response = ask_gpt(transcript['text'])
         return {"message": response, "author": True}
+
+
+@app.post("/chat_image/")
+async def chat_image(file: UploadFile = File(...)):
+    if not any(file.content_type.endswith(ext) for ext in ['image/jpeg', 'image/png', 'image/gif', 'image/bmp']):
+        raise HTTPException(status_code=400, detail="Formato de imagem não suportado.")
+
+    try:
+        image_bytes = await file.read()
+
+        temp_file_path = "temp_image.jpeg"
+        with open(temp_file_path, "wb") as temp_file:
+            temp_file.write(image_bytes)
+
+        with Image.open(temp_file_path) as img:
+            if img.width > 512 or img.height > 512:
+                img.thumbnail((512, 512))
+                img.save(temp_file_path)
+
+        # Código para subir a imagem em alguma plataforma e utilizar a url
+
+        image_url = "https://i.pinimg.com/564x/1c/6e/b3/1c6eb31fae8ada28e6823aef8c39549c.jpg"
+
+        os.remove(temp_file_path)
+
+        response = comment_on_image(image_url)
+
+        return {"message": response, "author": True}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
