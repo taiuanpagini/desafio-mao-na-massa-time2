@@ -12,7 +12,7 @@ interface IProps {
     setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const TextArea = ({ setIsLoading}: IProps) => {
+const TextArea: React.FC<IProps> = ({ setIsLoading}) => {
     const [inputText, setInputText] = useState<string>('');
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [isRecording, setIsRecording] = useState(false);
@@ -24,17 +24,11 @@ const TextArea = ({ setIsLoading}: IProps) => {
 
     const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-        event.preventDefault();
-            console.log(inputText);
-        // Salvar o texto digitado no array
+            event.preventDefault();
 
-        updateMessageList(false, inputText);
-        
-        // Limpar o input
-        setInputText('');
-        
-        // Disparar uma função
-        submitMessage(inputText);
+            updateMessageList(false, inputText);
+            setInputText('');
+            submitMessage(inputText);
         }
     };
 
@@ -43,10 +37,9 @@ const TextArea = ({ setIsLoading}: IProps) => {
             setIsLoading(true);
             updateMessageList(response?.data.author || true, response?.data.message || "Error backend");
         }).catch((error) => {
-            console.log("erro na requisição");
+            console.log(error);
         }).finally(() => {
             setIsLoading(false);
-            console.log("lista",messageList);
         });
 
         return;
@@ -62,7 +55,7 @@ const TextArea = ({ setIsLoading}: IProps) => {
                 mediaRecorder.onstop = handleStop;
 
                 mediaRecorderRef.current = mediaRecorder;
-                mediaRecorder.start(10000); // 10 seconds chunks
+                mediaRecorder.start();
 
                 setIsRecording(true);
             } catch (err) {
@@ -111,7 +104,7 @@ const TextArea = ({ setIsLoading}: IProps) => {
 
     const sendChunkToAPI = async (chunk: any) => {
         const formData = new FormData();
-        formData.append('audio', chunk,);
+        formData.append('file', chunk,);
 
         try {
             await chatService.createCardAudio(formData);

@@ -7,7 +7,7 @@ interface IProps {
     isLoading: boolean;
 }
 
-const Body = ({ isLoading }: IProps) => {
+const Body: React.FC<IProps> = ({ isLoading }) => {
     //const bottomRef = useRef();
     const { messageList } = useMessageContext();
     const render = (item: IResponse) => {
@@ -16,10 +16,6 @@ const Body = ({ isLoading }: IProps) => {
                     :
                     <MessageBackend>{item.message}</MessageBackend>
     }
-
-    // const MessageListMemo = useMemo(() => {
-    //     return messageList;
-    // }, [messageList]);
 
     return(
         <Container>
