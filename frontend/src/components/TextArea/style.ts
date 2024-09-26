@@ -4,10 +4,8 @@ export const TextInput = styled.input `
     width: 851px;
     height: 28px;
     border: #ffffff;
-
     border-radius: 8px;
     opacity: 0px;
-
     color: #000000;
     font-family: Mundial;
     font-size: 20px;
@@ -28,7 +26,7 @@ export const ContainerInput = styled.div `
 `;
 
 export const Container = styled.div `
-    width: 100%;
+    width: 80%;
     height: 10%;
     background: #F5E2DC;
     display: flex;

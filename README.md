@@ -40,7 +40,7 @@ $ pip install fastapi uvicorn requests transformers torch torchvision torchaudio
 
 # Iniciar o projeto
 $ yarn dev
-$ uvicorn principal:app --reload
+$ uvicorn principal-llama:app --reload # Executar na pasta ./backend
 ```
 
 O app estará disponível no seu browser pelo endereço http://localhost:3000.

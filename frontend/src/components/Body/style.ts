@@ -1,34 +1,20 @@
 import styled from "styled-components";
  
-export const ChatContainer = styled.div `
-     height: 80vd;
-    width: 400px;
-    background-color: #fff;
-    -webkit-box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.3);
-      box-shadow: 5px 5px 15px 5px rgba(0, 0, 0, 0.3);
-   
-   
-`;
 
 export const Container = styled.div `
     height: 80%;
-    width: 100%;
+    width: 80%;
+  padding: 0;
+  margin: 0 auto;
+  opacity: 90%;
+  background: #FFFFFF;
     display: flex;
     flex-direction: column-reverse;
     overflow-y: auto;
     
 `;
  
-// export const ChatBody = styled.div `
-//     padding: 0 10px;
-//     height: 550px;
-//     overflow-y: scroll;
-//     display: flex;
-//     flex-direction: column;
-   
-   
-// `;
- 
+
 export const MessageBackend = styled.div `
     max-width: 544px;
     height: auto;
