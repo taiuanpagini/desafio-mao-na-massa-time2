@@ -16,6 +16,7 @@ export const Container = styled.div `
     display: flex;
     flex-direction: column-reverse;
     overflow-y: auto;
+    
 `;
  
 // export const ChatBody = styled.div `

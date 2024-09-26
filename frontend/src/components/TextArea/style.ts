@@ -35,3 +35,11 @@ export const Container = styled.div `
     align-items: center;
     justify-content: center;
 `;
+
+export const Mic = styled.img `
+    cursor: pointer;
+`;
+
+export const Plus = styled.img `
+    cursor: pointer;
+`;

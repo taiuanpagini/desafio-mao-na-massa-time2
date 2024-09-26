@@ -1,4 +1,4 @@
 export interface IResponse {
-    author: number;
+    author: boolean;
     message: string;
 }

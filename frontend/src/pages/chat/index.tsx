@@ -5,19 +5,13 @@ import { IResponse } from "../../models/chatModel";
 import Body from "../../components/Body";
 
 const ChatPage = () => {
-    const messageListMock: IResponse[] = [
-        {author: 1, message: "okokossssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"},
-        {author: 2, message: "okokossssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"},
-        {author: 1, message: "okokossssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"},
-        {author: 2, message: "okokossssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssss"},
-    ] 
-    const [messageList, setMessageList] = useState<IResponse[]>(messageListMock);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     return(
         <Container>
             <ContainerBackground>
-                <Body messageList={messageList}/>
-                <TextArea setMessageList={setMessageList}/>
+                <Body isLoading={isLoading}/>
+                <TextArea setIsLoading={setIsLoading} />
             </ContainerBackground>
         </Container>
     );
