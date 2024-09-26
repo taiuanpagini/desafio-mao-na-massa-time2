@@ -15,9 +15,11 @@ interface IProps {
 const TextArea: React.FC<IProps> = ({ setIsLoading}) => {
     const [inputText, setInputText] = useState<string>('');
     const [openModal, setOpenModal] = useState<boolean>(false);
-    const [isRecording, setIsRecording] = useState(false);
-    const mediaRecorderRef: any = useRef(null);
-    const chunksRef: any = useRef([]);
+    const [isRecording, setIsRecording] = useState<boolean>(false);
+    const [audioUrl, setAudioUrl] = useState<string | null>(null);
+    const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+    const audioChunksRef = useRef<Blob[]>([]);
+
     const {updateMessageList, messageList} = useMessageContext();
     
     const chatService = new ChatService();
@@ -51,11 +53,24 @@ const TextArea: React.FC<IProps> = ({ setIsLoading}) => {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 const mediaRecorder = new MediaRecorder(stream);
 
-                mediaRecorder.ondataavailable = handleDataAvailable;
-                mediaRecorder.onstop = handleStop;
+                // mediaRecorder.ondataavailable = handleDataAvailable;
+                // mediaRecorder.onstop = handleStop;
 
                 mediaRecorderRef.current = mediaRecorder;
                 mediaRecorder.start();
+
+                mediaRecorder.ondataavailable = (event: BlobEvent) => {
+                    audioChunksRef.current.push(event.data);
+                }
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav'});
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    setAudioUrl(audioUrl);
+                    updateMessageList(true, audioUrl, "audio");
+                    sendChunkToAPI(audioBlob);
+                    audioChunksRef.current = [];
+                }
 
                 setIsRecording(true);
             } catch (err) {
@@ -65,10 +80,11 @@ const TextArea: React.FC<IProps> = ({ setIsLoading}) => {
     };
 
     const stopRecording = () => {
-        if (mediaRecorderRef.current) {
+        if (mediaRecorderRef.current && isRecording) {
             mediaRecorderRef.current.stop();
+            setIsRecording(false);
         }
-        setIsRecording(false);
+
     };
 
       const handleOpenModal = () => {
@@ -90,24 +106,15 @@ const TextArea: React.FC<IProps> = ({ setIsLoading}) => {
         return;
       };
 
-      const handleDataAvailable = async (event: any) => {
-        if (event.data.size > 0) {
-            const chunk = event.data;
-            chunksRef.current.push(chunk);
-            await sendChunkToAPI(chunk);
-        }
-    };
-
-    const handleStop = () => {
-        chunksRef.current = [];
-    };
-
-    const sendChunkToAPI = async (chunk: any) => {
+    const sendChunkToAPI = async (chunk: Blob) => {
         const formData = new FormData();
-        formData.append('file', chunk,);
+        console.log("teste blob", chunk);
+        formData.append('file', chunk);
 
         try {
-            await chatService.createCardAudio(formData);
+            await chatService.createCardAudio(formData).then((response) => {
+                updateMessageList(response?.data.author || true, response?.data.message || "Error backend");
+            });
         } catch {
             stopRecording();
         }

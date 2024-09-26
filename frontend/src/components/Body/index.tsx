@@ -8,13 +8,21 @@ interface IProps {
 }
 
 const Body: React.FC<IProps> = ({ isLoading }) => {
-    //const bottomRef = useRef();
+
     const { messageList } = useMessageContext();
     const render = (item: IResponse) => {
-        return !item.author ? 
-                    <MessageFront>{item.message}</MessageFront>
-                    :
-                    <MessageBackend>{item.message}</MessageBackend>
+        if(!item.author && item.type === "text") return <MessageFront>{item.message}</MessageFront>;
+        if(item.author && item.type === "text") return <MessageBackend>{item.message}</MessageBackend>;
+
+        if(!item.author && item.type === "audio") {
+            return (
+                <MessageFront><audio controls>
+                  <source src={item.message} type="audio/wav" />
+                </audio></MessageFront>
+              )
+        }
+
+        return;
     }
 
     return(

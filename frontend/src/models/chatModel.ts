@@ -1,5 +1,5 @@
 export interface IResponse {
-    id?: number;
+    type?: string;
     author: boolean;
     message: string;
 }

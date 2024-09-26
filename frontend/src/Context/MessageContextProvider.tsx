@@ -8,8 +8,8 @@ export function MessageContextProvider(props: MessageContextProviderProps) {
     const { children } = props;
     const [messageList, setMessageList] = useState<IResponse[]>([]);
   
-    const updateMessageList = async (author: boolean, message:string) => {
-      const newItem: IResponse = {author: author, message: message};
+    const updateMessageList = async (author: boolean, message:string, type: string = "text") => {
+      const newItem: IResponse = {author: author, message: message, type: type};
       setMessageList(prevItems => [...prevItems, newItem]);
     };
   
