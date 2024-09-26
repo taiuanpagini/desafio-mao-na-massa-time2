@@ -19,9 +19,9 @@ export class ChatService {
         }
     };
     
-    createCardAudio = async (file: FormData): Promise<AxiosResponse<IResponse> | undefined> => {
+    createCardAudio = async (form: FormData): Promise<AxiosResponse<IResponse> | undefined> => {
        try {
-            const response = await axios.post<IResponse>("/chat_audio/", { file }, {
+            const response = await axios.post<IResponse>("/chat_audio/", form, {
                 headers: {
                 'Content-Type': 'multipart/form-data'
                 }
@@ -30,5 +30,5 @@ export class ChatService {
         } catch (error) {
             console.log(error);
         }
-        };
+    };
 }
