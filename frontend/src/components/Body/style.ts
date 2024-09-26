@@ -39,3 +39,9 @@ export const MessageFront = styled.div `
     border-radius: 7px;
     align-self: end;
 `;
+
+export const ImageFront = styled.img `
+    height: 200px;
+    width: 200px;
+
+`;
