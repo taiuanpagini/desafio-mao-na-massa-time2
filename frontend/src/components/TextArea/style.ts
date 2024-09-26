@@ -26,7 +26,7 @@ export const ContainerInput = styled.div `
 `;
 
 export const Container = styled.div `
-    width: 80%;
+    width: 100%;
     height: 10%;
     background: #F5E2DC;
     display: flex;

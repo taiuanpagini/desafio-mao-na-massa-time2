@@ -20,7 +20,7 @@ export const ModalContent = styled.div`
   padding-left: 10px;
   border-radius: 5px;
   position: fixed;
-  top: 445px;
+  top: 515px;
   left: 300px;
   border: solid #F5E2DC 1px;
   width: 167px;
@@ -44,6 +44,7 @@ export const Button = styled.button`
   font-weight: 300;
   line-height: 18.96px;
   text-align: left;
+  
 
 `;
 

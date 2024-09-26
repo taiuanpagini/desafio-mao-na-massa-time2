@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const Container = styled.div`
   
     opacity: 100%;
-    width: 80%;
+    width: 100%;
     margin: 0px auto;
     height: 10%;
     display: flex;
@@ -12,9 +12,11 @@ export const Container = styled.div`
     align-items: center;
 `;
 
+
 export const TitleContainer= styled.div `
     width: 100%;
-      height: 100%;
+    height: 100%;
+
     background-color: #fff;
     display:flex;
     justify-content: center;
@@ -24,11 +26,10 @@ export const TitleContainer= styled.div `
 `;
 
 export const Spacer = styled.div`
-    display: flex;
-    height: 4px;
-    width: 100%;
-    background-color: #000;
-    opacity: 0%;
+  width: 100%;
+  margin-top: 5px;
+  height: 4px;
+  background-color: #68009F;
 `;
 
 export const FirstTitle = styled.div`
