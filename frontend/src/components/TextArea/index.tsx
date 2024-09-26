@@ -108,7 +108,6 @@ const TextArea: React.FC<IProps> = ({ setIsLoading}) => {
 
     const sendChunkToAPI = async (chunk: Blob) => {
         const formData = new FormData();
-        console.log("teste blob", chunk);
         formData.append('file', chunk);
 
         try {

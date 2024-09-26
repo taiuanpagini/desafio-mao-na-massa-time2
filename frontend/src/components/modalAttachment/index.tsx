@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import { Button, ContainerButtonFlex, ModalContainer, ModalContent } from "./style";
+import React, { useRef } from "react";
+import { Button, ContainerButtonFlex, ModalContent } from "./style";
 import cam from "../../assets/cam.svg";
 import audio from "../../assets/audio.svg";
 import { ChatService } from "../../services/chatService";
@@ -15,13 +15,12 @@ const ModalAttachment: React.FC = () => {
   };
 
     const handleBtn1Click = () => {
-        alert('sem funcion');
+        alert('sem funcionar');
       };
   
 
       const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const fileData = event.target.files?.[0];
-        console.log("anexo", fileData);
         if (fileData) {
           const formData = new FormData();
           formData.append('file', fileData);
