@@ -1,30 +1,36 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { Container, MessageBackend, MessageFront } from "./style";
 import { IResponse } from "../../models/chatModel";
+import { useMessageContext } from "../../Context/MessageContextProvider";
 
 interface IProps {
-    messageList: IResponse[];
+    isLoading: boolean;
 }
 
-const Body = ({ messageList }: IProps) => {
-    //const bottomRef = useRef();
+const Body: React.FC<IProps> = ({ isLoading }) => {
+    const { messageList } = useMessageContext();
+    const render = (item: IResponse, index: number) => {
+        if(!item.author && item.type === "text") return <MessageFront key={index}>{item.message}</MessageFront>;
+        if(item.author && item.type === "text") return <MessageBackend key={index}>{item.message}</MessageBackend>;
 
-    // const scrollDown = () => {
-    //     bottomRef.current.scrollIntoView({behavior: 'smooth'})
-    // }
+        if(!item.author && item.type === "audio") {
+            return (
+                <MessageFront key={index}><audio controls>
+                  <source src={item.message} type="audio/wav" />
+                </audio></MessageFront>
+              )
+        }
 
-    const MessageListMemo = useMemo(() => {
-        return messageList;
-    }, [messageList]);
+        return;
+    }
 
     return(
         <Container>
-            {MessageListMemo?.map((item) => (
-                item.author === 1 ? 
-                    <MessageFront>{item.message}</MessageFront>
-                    :
-                    <MessageBackend>{item.message}</MessageBackend>
-            ))}
+            {messageList?.map((item, index) => (
+                render(item, index)
+            )).reverse()}
+
+            {isLoading && <MessageBackend>Esperando resposta</MessageBackend>}
         </Container>
     );
 }

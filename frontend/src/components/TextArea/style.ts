@@ -4,12 +4,10 @@ export const TextInput = styled.input `
     width: 851px;
     height: 28px;
     border: #ffffff;
-
     border-radius: 8px;
     opacity: 0px;
-
     color: #000000;
-    font-family: Mundial;
+    font-family: Roboto;
     font-size: 20px;
     font-weight: 300;
     line-height: 18.96px;
@@ -34,4 +32,12 @@ export const Container = styled.div `
     display: flex;
     align-items: center;
     justify-content: center;
+`;
+
+export const Mic = styled.img `
+    cursor: pointer;
+`;
+
+export const Plus = styled.img `
+    cursor: pointer;
 `;
