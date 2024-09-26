@@ -3,10 +3,16 @@ import { Button, ContainerButtonFlex, ModalContent } from "./style";
 import cam from "../../assets/cam.svg";
 import audio from "../../assets/audio.svg";
 import { ChatService } from "../../services/chatService";
+import { useMessageContext } from "../../Context/MessageContextProvider";
 
-const ModalAttachment: React.FC = () => {
+interface IProps {
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const ModalAttachment: React.FC<IProps> = ({ setOpenModal }) => {
   const fileInputRef = useRef<any>(null);
   const chatService = new ChatService();
+  const {updateMessageList} = useMessageContext();
 
   const handleButtonClick = () => {
     if (fileInputRef.current) {
@@ -24,8 +30,17 @@ const ModalAttachment: React.FC = () => {
         if (fileData) {
           const formData = new FormData();
           formData.append('file', fileData);
-          await chatService.createCardAudio(formData)
+
+          const audioBlob = new Blob([fileData], { type: 'audio/wav'});
+          const audioUrl = URL.createObjectURL(audioBlob);
+          updateMessageList(false, audioUrl, "audio");
+
+          await chatService.createCardAudio(formData).then((response) => {
+            updateMessageList(response?.data.author || true, response?.data.message || "Error backend");
+          })
         }
+
+        setOpenModal(false);
       };
 
    return (

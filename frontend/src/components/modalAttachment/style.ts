@@ -13,18 +13,18 @@ export const ModalContainer = styled.div`
 `;
 
 export const ModalContent = styled.div`
-  background-color: white;
+background-color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding-left: 10px;
   border-radius: 5px;
-  position: fixed;
-  top: 515px;
-  left: 300px;
+  position: absolute;
+  top: 730px; /* Posição em relação ao topo do elemento pai */
+  left: 30; /* Posição em relação à esquerda do elemento pai */
   border: solid #F5E2DC 1px;
   width: 167px;
-  height: 120px; 
+  height: 120px;
   border-radius: 8px;
   
 `;
