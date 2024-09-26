@@ -1,12 +1,16 @@
 import React from "react";
-import { Container, FirstTitle, SecondTitle, Spacer } from "./style";
+import { Container, FirstTitle, SecondTitle, Spacer, TitleContainer } from "./style";
 
 const Header = () => {
     return (
 
         <Container>
+            <TitleContainer>
             <FirstTitle>Chat |</FirstTitle>
             <SecondTitle>Mão na Massa</SecondTitle>
+            </TitleContainer>
+           
+            <Spacer></Spacer>
         </Container>
 
     );

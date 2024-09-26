@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Container, ContainerInput, TextInput } from "./style"
-import mic from "../../assets/mic.svg"
+import send from "../../assets/send.svg"
 import plus from "../../assets/plus.svg"
 import { IResponse } from "../../models/chatModel";
 
@@ -41,7 +41,7 @@ const TextArea = ({ setMessageList }: IProps) => {
             {/* <TextInput placeholder='Mensagem' onKeyDown={(e)=>getEnterKey(e)}/> */}
             <img src={plus}/>
             <TextInput placeholder='Digite uma mensagem'/>
-            <img src={mic}/>
+            <img src={send}/>
             {/* <SendIcon sx={{m:1, cursor: 'pointer'}} onClick={()=>handleSubmit()} color="primary" /> */}
             </ContainerInput>
         </Container>
