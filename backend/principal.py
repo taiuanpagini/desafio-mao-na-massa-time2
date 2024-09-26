@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, Request, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
 from pydub import AudioSegment
 from tempfile import NamedTemporaryFile
 import requests
@@ -9,6 +10,7 @@ from unidecode import unidecode
 from datetime import datetime, timedelta
 import speech_recognition as sr
 import os
+import json
 
 from pydantic import BaseModel
 
@@ -16,6 +18,14 @@ class MessageRequest(BaseModel):
 	message: str
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 TRELLO_KEY = ""
 TRELLO_TOKEN = ""
@@ -39,62 +49,63 @@ def ask_llama(prompt):
 	except openai.error.RateLimitError:
 		return "Atingido o limite de requisições."
 
-def extract_card_info(message):
-	normalized_message = unidecode(message)
+def extract_card_info(message_str):
+	message = json.loads(message_str)
+    
+	description = message.get("description", "")
 
-	match = re.search(
-		r'(titulo|título)\s*([\w\s]+?)\s*(e\s*com|e|ou)\s*(descricao|descrição)\s*(.*)', 
-		normalized_message, 
-		re.IGNORECASE
-	)
-
+	match = re.search(r'(?:descricao|descrição)\s*(.*)', description, re.IGNORECASE)
+	
 	if match:
-		return {"title": match.group(2).strip(), "description": match.group(5).strip()}
+			message["description"] = match.group(1).strip()
 
-	match = re.search(r'(titulo|título)\s*([\w\s]+)', normalized_message, re.IGNORECASE)
-	if match:
-		title = match.group(2).strip()
-		return {"title": title, "description": "Sem descricao."}
+	return json.dumps(message, indent=2, ensure_ascii=False)
 
-	match = re.search(r'(descricao|descrição)\s*(.*)', normalized_message, re.IGNORECASE)
-	if match:
-		description = match.group(2).strip()
-		return {"title": "Sem titulo.", "description": description}
+async def create_trello_card(card_info_str):
+	try:
+		card_info = json.loads(card_info_str)
+		print("card_info", card_info)
+	except json.JSONDecodeError:
+		raise HTTPException(status_code=400, detail="Erro na decodificação JSON. Verifique a entrada.")
 
-	return None
+	due_date = (datetime.now() + timedelta(weeks=1)).isoformat()
 
-async def create_trello_card(card_info):
-    due_date = (datetime.now() + timedelta(weeks=1)).isoformat()
-    url = "https://api.trello.com/1/cards"
-    query = {
-        'key': TRELLO_KEY,
-        'token': TRELLO_TOKEN,
-        'idList': TRELLO_LIST_ID,
-        'name': card_info['title'],
-        'desc': card_info['description'],
-        'due': due_date
-    }
+	url = "https://api.trello.com/1/cards"
+	query = {
+			'key': TRELLO_KEY,
+			'token': TRELLO_TOKEN,
+			'idList': TRELLO_LIST_ID,
+			'name': card_info['title'],
+			'desc': card_info['description'],
+			'due': due_date
+	}
 
-    trello_response = requests.post(url, params=query)
+	trello_response = requests.post(url, params=query)
 
-    if trello_response.status_code == 200:
-    	return {"message": "Card criado com sucesso no Trello!", "card_info": card_info}
-    else:
-        raise HTTPException(status_code=trello_response.status_code, detail="Erro ao criar card no Trello")
+	if trello_response.status_code == 200:
+		return {"message": "Card criado com sucesso no Trello!", "card_info": card_info}
+	else:
+			raise HTTPException(status_code=trello_response.status_code, detail="Erro ao criar card no Trello")
 
 @app.post("/chat_mensagem/")
 async def chat_mensagem(request: Request, message_request: MessageRequest):
 	user_id = request.client.host
 	message = message_request.message
-	due_date = (datetime.now() + timedelta(weeks=1)).isoformat()
 
-	card_info = extract_card_info(message)
-	if card_info:
-			result = await create_trello_card(card_info)
-			return {**result, "author": True}
+	if "titulo" in message or "título" in message or "descrição" in message or "descricao" in message:
+		response = ask_llama("transforme em json formatado com title e description na raiz do objeto ignorando palavra card " + message)
+		card_info = extract_card_info(response)
 
-	initial_response = ask_llama(message)
-	return {"message": "Não foi possível entender sua mensagem. Tente por exemplo: Criar um card", "author": True}
+		if card_info:
+			result = await create_trello_card(response)
+			return {**result, "author": True, "response": response}
+
+		return {"message": "Não foi possível entender sua mensagem. Tente por exemplo: Criar um card com titulo Minha task e descrição Minha primeira task", "author": True, "response": response}
+	else:
+		response = ask_llama(message)
+		return {"message": response, "author": True}
+
+	return {"message": "Não foi possível entender sua mensagem. Tente por exemplo: Criar um card com titulo Minha task e descrição Minha primeira task", "author": True}
 
 @app.post("/chat_audio/")
 async def chat_audio(file: UploadFile = File(...)):
@@ -121,9 +132,17 @@ async def chat_audio(file: UploadFile = File(...)):
 	except Exception as e:
 		raise HTTPException(status_code=500, detail=str(e))
 	
-	card_info = extract_card_info(transcript['text'])
-	if card_info:
-			result = await create_trello_card(card_info)
-			return {**result, "author": True}
+	if "titulo" in transcript['text'] or "título" in transcript['text'] or "descrição" in transcript['text'] or "descricao" in transcript['text']:
+		response = ask_llama("transforme em json formatado com title e description na raiz do objeto ignorando palavra card " + transcript['text'])
+		card_info = extract_card_info(response)
 
-	return {"message": "Não foi possível entender sua mensagem. Tente por exemplo: Criar um card", "author": True}
+		if card_info:
+			result = await create_trello_card(response)
+			return {**result, "author": True, "response": response}
+
+		return {"message": "Não foi possível entender sua mensagem. Tente por exemplo: Criar um card com titulo Minha task e descrição Minha primeira task", "author": True, "response": response}
+	else:
+		response = ask_llama(transcript['text'])
+		return {"message": response, "author": True}
+
+	return {"message": "Não foi possível entender sua mensagem. Tente por exemplo: Criar um card com titulo Minha task e descrição Minha primeira task", "author": True}
