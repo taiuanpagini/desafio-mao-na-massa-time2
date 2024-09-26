@@ -34,7 +34,7 @@ export const Spacer = styled.div`
 
 export const FirstTitle = styled.div`
     color: #68009F;
-    font-family: Mundial;
+    font-family: Roboto;
     font-size: 56px;
     font-weight: 300;
     line-height: 53.07px;
@@ -44,7 +44,7 @@ export const FirstTitle = styled.div`
 
 export const SecondTitle = styled.div`
     color: #D2006F;
-    font-family: Mundial;
+    font-family: Roboto;
     font-size: 56px;
     font-weight: 700;
     line-height: 53.07px;

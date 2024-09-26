@@ -7,7 +7,7 @@ export const TextInput = styled.input `
     border-radius: 8px;
     opacity: 0px;
     color: #000000;
-    font-family: Mundial;
+    font-family: Roboto;
     font-size: 20px;
     font-weight: 300;
     line-height: 18.96px;

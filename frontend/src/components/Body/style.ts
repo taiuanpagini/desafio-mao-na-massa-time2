@@ -13,7 +13,6 @@ export const Container = styled.div `
     overflow-y: auto;
     
 `;
- 
 
 export const MessageBackend = styled.div `
     max-width: 544px;

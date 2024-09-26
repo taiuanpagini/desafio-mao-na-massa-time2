@@ -39,7 +39,7 @@ export const Button = styled.button`
   color: #000000;
   cursor: pointer;
 
-  font-family: Mundial;
+  font-family: Roboto;
   font-size: 20px;
   font-weight: 300;
   line-height: 18.96px;

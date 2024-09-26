@@ -25,7 +25,7 @@ const Body = ({ isLoading }: IProps) => {
         <Container>
             {messageList?.map((item) => (
                 render(item)
-            ))}
+            )).reverse()}
 
             {isLoading && <MessageBackend>Esperando resposta</MessageBackend>}
         </Container>

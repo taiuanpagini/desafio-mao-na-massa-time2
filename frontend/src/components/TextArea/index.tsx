@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Container, ContainerInput, Mic, Plus, TextInput } from "./style";
 import mic from "../../assets/mic.svg";
+import notMic from "../../assets/notMic.svg";
 import plus from "../../assets/plus.svg";
 import notPlus from "../../assets/notPlus.svg";
 import { ChatService } from "../../services/chatService";
@@ -14,6 +15,9 @@ interface IProps {
 const TextArea = ({ setIsLoading}: IProps) => {
     const [inputText, setInputText] = useState<string>('');
     const [openModal, setOpenModal] = useState<boolean>(false);
+    const [isRecording, setIsRecording] = useState(false);
+    const mediaRecorderRef: any = useRef(null);
+    const chunksRef: any = useRef([]);
     const {updateMessageList, messageList} = useMessageContext();
     
     const chatService = new ChatService();
@@ -48,10 +52,73 @@ const TextArea = ({ setIsLoading}: IProps) => {
         return;
       };
 
+      const startRecording = async () => {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                const mediaRecorder = new MediaRecorder(stream);
+
+                mediaRecorder.ondataavailable = handleDataAvailable;
+                mediaRecorder.onstop = handleStop;
+
+                mediaRecorderRef.current = mediaRecorder;
+                mediaRecorder.start(10000); // 10 seconds chunks
+
+                setIsRecording(true);
+            } catch (err) {
+                console.error('Error accessing audio devices:', err);
+            }
+        }
+    };
+
+    const stopRecording = () => {
+        if (mediaRecorderRef.current) {
+            mediaRecorderRef.current.stop();
+        }
+        setIsRecording(false);
+    };
+
       const handleOpenModal = () => {
         setOpenModal(!openModal);
         return;
       };
+
+      const handleOpenMic = () => {
+        setIsRecording(!isRecording);
+
+        if (!isRecording) {
+            startRecording()
+        }
+
+        if (isRecording) {
+            stopRecording()
+        }
+
+        return;
+      };
+
+      const handleDataAvailable = async (event: any) => {
+        if (event.data.size > 0) {
+            const chunk = event.data;
+            chunksRef.current.push(chunk);
+            await sendChunkToAPI(chunk);
+        }
+    };
+
+    const handleStop = () => {
+        chunksRef.current = [];
+    };
+
+    const sendChunkToAPI = async (chunk: any) => {
+        const formData = new FormData();
+        formData.append('audio', chunk,);
+
+        try {
+            await chatService.createCardAudio(formData);
+        } catch {
+            stopRecording();
+        }
+    };
 
     return(
         <Container>
@@ -64,7 +131,7 @@ const TextArea = ({ setIsLoading}: IProps) => {
                 onKeyUp={handleKeyPress}
                 placeholder='Digite uma mensagem'
                 />
-            <Mic src={mic}/>
+            <Mic src={isRecording ? notMic : mic} onClick={() => handleOpenMic()}/>
             </ContainerInput>
         </Container>
     );
