@@ -112,7 +112,7 @@ async def chat_mensagem(request: Request, message_request: MessageRequest):
 
 @app.post("/chat_audio/")
 async def chat_audio(file: UploadFile = File(...)):
-    if not file.filename.endswith(('.wav', '.mp3', '.flac', '.ogg')):
+    if not any(file.content_type.endswith(ext) for ext in ['audio/wav', 'audio/mpeg', 'audio/flac', 'audio/ogg']):
         raise HTTPException(status_code=400, detail="Formato de áudio não suportado.")
 
     try:
