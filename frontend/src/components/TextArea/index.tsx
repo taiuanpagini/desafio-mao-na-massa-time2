@@ -109,7 +109,8 @@ const TextArea: React.FC<IProps> = ({ setIsLoading}) => {
     const sendChunkToAPI = async (chunk: Blob) => {
         const formData = new FormData();
         formData.append('file', chunk);
-
+        console.log("teste", chunk);
+        console.log("teste form", formData);
         try {
             await chatService.createCardAudio(formData).then((response) => {
                 updateMessageList(response?.data.author || true, response?.data.message || "Error backend");

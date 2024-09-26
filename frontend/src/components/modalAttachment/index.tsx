@@ -35,7 +35,7 @@ const ModalAttachment: React.FC = () => {
         </ContainerButtonFlex>
         <ContainerButtonFlex>
           <>
-            <img src={audio}/><Button onClick={handleButtonClick}>Audio</Button> 
+            <img src={audio}/><Button onClick={handleButtonClick}>Áudio</Button> 
           </> 
           <input
             type="file"
