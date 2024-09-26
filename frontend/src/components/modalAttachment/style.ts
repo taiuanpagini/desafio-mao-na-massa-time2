@@ -20,8 +20,8 @@ background-color: white;
   padding-left: 10px;
   border-radius: 5px;
   position: absolute;
-  top: 730px; /* Posição em relação ao topo do elemento pai */
-  left: 30; /* Posição em relação à esquerda do elemento pai */
+  top: 45.625rem; /* Posição em relação ao topo do elemento pai */
+  left: 30rem; /* Posição em relação à esquerda do elemento pai */
   border: solid #F5E2DC 1px;
   width: 167px;
   height: 120px;

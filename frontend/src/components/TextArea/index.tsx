@@ -68,6 +68,7 @@ const TextArea: React.FC<IProps> = ({ setIsLoading}) => {
                     const audioUrl = URL.createObjectURL(audioBlob);
                     setAudioUrl(audioUrl);
                     updateMessageList(false, audioUrl, "audio");
+                    setInputText('')
                     sendChunkToAPI(audioBlob);
                     audioChunksRef.current = [];
                 }
@@ -96,7 +97,7 @@ const TextArea: React.FC<IProps> = ({ setIsLoading}) => {
         setIsRecording(!isRecording);
 
         if (!isRecording) {
-            startRecording()
+            startRecording();
         }
 
         if (isRecording) {
@@ -126,8 +127,8 @@ const TextArea: React.FC<IProps> = ({ setIsLoading}) => {
                 <div>{openModal && <ModalAttachment setOpenModal={setOpenModal} />}</div>
             <Plus src={openModal ? notPlus : plus} onClick={() => handleOpenModal()}/>
             <TextInput type="text"
-                value={inputText}
-                onChange={(e) => setInputText(e.target.value)}
+                value={isRecording ? "Gravando......" : inputText}
+                onChange={(e) => !isRecording && setInputText(e.target.value)}
                 onKeyUp={handleKeyPress}
                 placeholder='Digite uma mensagem'
                 />

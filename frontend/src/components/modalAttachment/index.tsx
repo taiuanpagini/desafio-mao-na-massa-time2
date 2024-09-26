@@ -11,6 +11,7 @@ interface IProps {
 
 const ModalAttachment: React.FC<IProps> = ({ setOpenModal }) => {
   const fileInputRef = useRef<any>(null);
+  const imageInputRef = useRef<any>(null);
   const chatService = new ChatService();
   const {updateMessageList} = useMessageContext();
 
@@ -20,33 +21,66 @@ const ModalAttachment: React.FC<IProps> = ({ setOpenModal }) => {
     }
   };
 
-    const handleBtn1Click = () => {
-        alert('sem funcionar');
-      };
-  
+  const handleImageButtonClick = () => {
+    if (imageInputRef.current) {
+      imageInputRef.current.click();
+    }
+  };
 
-      const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        const fileData = event.target.files?.[0];
-        if (fileData) {
-          const formData = new FormData();
-          formData.append('file', fileData);
+  const handleBtn1Click = () => {
+      alert('sem funcionar');
+    };
 
-          const audioBlob = new Blob([fileData], { type: 'audio/wav'});
-          const audioUrl = URL.createObjectURL(audioBlob);
-          updateMessageList(false, audioUrl, "audio");
 
-          await chatService.createCardAudio(formData).then((response) => {
-            updateMessageList(response?.data.author || true, response?.data.message || "Error backend");
-          })
-        }
+    const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const fileData = event.target.files?.[0];
+      if (fileData) {
+        const formData = new FormData();
+        formData.append('file', fileData);
 
-        setOpenModal(false);
-      };
+        const audioBlob = new Blob([fileData], { type: 'audio/wav'});
+        const audioUrl = URL.createObjectURL(audioBlob);
+        updateMessageList(false, audioUrl, "audio");
+
+        await chatService.createCardAudio(formData).then((response) => {
+          updateMessageList(response?.data.author || true, response?.data.message || "Error backend");
+        })
+      }
+
+      setOpenModal(false);
+    };
+
+    const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const fileData = event.target.files?.[0];
+      if (fileData) {
+        const formData = new FormData();
+        formData.append('file', fileData);
+
+        const imageBlob = new Blob([fileData]);
+        const imageUrl = URL.createObjectURL(imageBlob);
+        updateMessageList(false, imageUrl, "image");
+
+        await chatService.createCardImage(formData).then((response) => {
+          updateMessageList(response?.data.author || true, response?.data.message || "Error backend");
+        })
+      }
+
+      setOpenModal(false);
+    };
 
    return (
       <ModalContent>
         <ContainerButtonFlex>
-            <img src={cam}/><Button onClick={handleBtn1Click} disabled={true}>Imagem</Button>
+          <>
+            <img src={cam}/><Button onClick={handleImageButtonClick}>Imagem</Button>
+          </>
+          <input
+            type="file"
+            ref={imageInputRef}
+            style={{ display: 'none' }}
+            accept=".jpg, .jpeg, .png" 
+            onChange={handleImageChange}
+          />
         </ContainerButtonFlex>
         <ContainerButtonFlex>
           <>

@@ -31,4 +31,17 @@ export class ChatService {
             console.log(error);
         }
     };
+
+    createCardImage = async (form: FormData): Promise<AxiosResponse<IResponse> | undefined> => {
+        try {
+             const response = await axios.post<IResponse>("/chat_image/", form, {
+                 headers: {
+                 'Content-Type': 'multipart/form-data'
+                 }
+             });
+             return response;
+         } catch (error) {
+             console.log(error);
+         }
+     };
 }
