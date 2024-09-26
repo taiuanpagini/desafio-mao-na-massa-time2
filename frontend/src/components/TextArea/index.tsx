@@ -67,7 +67,7 @@ const TextArea: React.FC<IProps> = ({ setIsLoading}) => {
                     const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav'});
                     const audioUrl = URL.createObjectURL(audioBlob);
                     setAudioUrl(audioUrl);
-                    updateMessageList(true, audioUrl, "audio");
+                    updateMessageList(false, audioUrl, "audio");
                     sendChunkToAPI(audioBlob);
                     audioChunksRef.current = [];
                 }
