@@ -37,7 +37,7 @@ const TextArea: React.FC<IProps> = ({ setIsLoading}) => {
     const submitMessage = async (message: string) => {
         await chatService.createCardMessage(message).then((response) => {
             setIsLoading(true);
-            updateMessageList(response?.data.author || true, response?.data.message || "Error backend");
+            updateMessageList(response?.data.author || true, response?.data.message || "Error backend", "text", response?.data.card_url);
         }).catch((error) => {
             console.log(error);
         }).finally(() => {
@@ -114,7 +114,7 @@ const TextArea: React.FC<IProps> = ({ setIsLoading}) => {
         console.log("teste form", formData);
         try {
             await chatService.createCardAudio(formData).then((response) => {
-                updateMessageList(response?.data.author || true, response?.data.message || "Error backend");
+                updateMessageList(response?.data.author || true, response?.data.message || "Error backend", "text", response?.data.card_url);
             });
         } catch {
             stopRecording();

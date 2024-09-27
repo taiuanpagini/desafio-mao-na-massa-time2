@@ -4,14 +4,38 @@ import styled from "styled-components";
 export const Container = styled.div `
     height: 80%;
     width: 80%;
-  padding: 0;
-  margin: 0 auto;
-  opacity: 90%;
-  background: #FFFFFF;
+    padding: 0;
+    margin: 0 auto;
+    opacity: 90%;
+    background: #FFFFFF;
     display: flex;
     flex-direction: column-reverse;
     overflow-y: auto;
     
+`;
+
+export const DivInput = styled.div `
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+`;
+
+export const ButtonCard = styled.button`
+    background-color: #FFDEF6;
+    width: 180px;
+    height: 50px;
+    cursor: pointer;
+    border-radius: 8px;
+
+    font-family: Roboto;
+    font-size: 16px;
+    line-height: 18.96px;
+
+    &:hover {
+        background-color: #FFFFFF;
+    }
+
 `;
 
 export const MessageBackend = styled.div `
@@ -25,6 +49,9 @@ export const MessageBackend = styled.div `
     border-radius: 7px;
     align-self: start;
    
+    font-family: Roboto;
+    font-size: 16px;
+    line-height: 18.96px;
 `;
  
 export const MessageFront = styled.div `
@@ -38,10 +65,14 @@ export const MessageFront = styled.div `
     margin: 16px 86px 16px 0px;
     border-radius: 7px;
     align-self: end;
+
+    font-family: Roboto;
+    font-size: 16px;
+    line-height: 18.96px;
 `;
 
 export const ImageFront = styled.img `
-    height: 200px;
+    max-height: 200px;
     width: 200px;
 
 `;

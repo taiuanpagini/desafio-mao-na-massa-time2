@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { Container, ImageButtonFront, ImageFront, MessageBackend, MessageFront } from "./style";
+import { ButtonCard, Container, DivInput, ImageButtonFront, ImageFront, MessageBackend, MessageFront } from "./style";
 import { IResponse } from "../../models/chatModel";
 import { useMessageContext } from "../../Context/MessageContextProvider";
 
@@ -18,9 +18,18 @@ const Body: React.FC<IProps> = ({ isLoading }) => {
         }
     }
 
+    const redirectUrlCard = (url: string) => {
+        window.open(url, "_blank");
+    }
+
+    const isUrl = (item: IResponse) => {
+        console.log(item?.card_url)
+        return item?.card_url && item?.card_url?.length > 0 ? <ButtonCard onClick={() => redirectUrlCard(item.card_url || '')}>Clique aqui para ver!</ButtonCard> : ``;
+    }
+
     const render = (item: IResponse, index: number) => {
         if (!item.author && item.type === "text") return <MessageFront key={index}>{item.message}</MessageFront>;
-        if (item.author && item.type === "text") return <MessageBackend key={index}>{item.message}</MessageBackend>;
+        if (item.author && item.type === "text") return <MessageBackend key={index}><DivInput>{item.message} {isUrl(item)}</DivInput></MessageBackend>;
 
         if (!item.author && item.type === "audio") {
             return (

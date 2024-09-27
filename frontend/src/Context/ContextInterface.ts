@@ -4,7 +4,7 @@ import { IResponse } from "../models/chatModel";
 export type MessageContextType = {
   messageList: IResponse[];
   setMessageList: React.Dispatch<React.SetStateAction<IResponse[]>>
-  updateMessageList: (author: boolean, message:string, type?: string) => void;
+  updateMessageList: (author: boolean, message:string, type?: string, card_url?: string) => void;
 };
 
 export type MessageContextProviderProps = {

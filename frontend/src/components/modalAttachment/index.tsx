@@ -43,7 +43,7 @@ const ModalAttachment: React.FC<IProps> = ({ setOpenModal }) => {
         updateMessageList(false, audioUrl, "audio");
 
         await chatService.createCardAudio(formData).then((response) => {
-          updateMessageList(response?.data.author || true, response?.data.message || "Error backend");
+          updateMessageList(response?.data.author || true, response?.data.message || "Error backend", "text", response?.data.card_url);
         })
       }
 
@@ -61,7 +61,7 @@ const ModalAttachment: React.FC<IProps> = ({ setOpenModal }) => {
         updateMessageList(false, imageUrl, "image");
 
         await chatService.createCardImage(formData).then((response) => {
-          updateMessageList(response?.data.author || true, response?.data.message || "Error backend");
+          updateMessageList(response?.data.author || true, response?.data.message || "Error backend", "text", response?.data.card_url);
         })
       }
 
