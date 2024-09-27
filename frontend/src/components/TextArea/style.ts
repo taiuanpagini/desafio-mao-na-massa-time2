@@ -1,5 +1,10 @@
 import styled from "styled-components";
 
+interface IStyled {
+    isRecord?: boolean;
+    openModal?: boolean;
+}
+
 export const TextInput = styled.input `
     width: 851px;
     height: 28px;
@@ -25,6 +30,12 @@ export const ContainerInput = styled.div `
     gap: 16px;
 `;
 
+export const DivInput = styled.div `
+    display:flex;
+    justify-content: center;
+    align-items: center;
+`;
+
 export const Container = styled.div `
     width: 100%;
     height: 10%;
@@ -34,10 +45,18 @@ export const Container = styled.div `
     justify-content: center;
 `;
 
-export const Mic = styled.img `
+export const Mic = styled.img<IStyled> `
     cursor: pointer;
+
+    background-color: ${props => props.isRecord && '#68009F'};
+    border-radius: 16px;
+
 `;
 
-export const Plus = styled.img `
+export const Plus = styled.img<IStyled> `
     cursor: pointer;
+    background-color: ${props => props.openModal && '#68009F'};
+
+    border-radius: 16px;
+    padding: 4px;
 `;

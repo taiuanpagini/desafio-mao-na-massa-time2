@@ -20,8 +20,8 @@ background-color: white;
   padding-left: 10px;
   border-radius: 5px;
   position: absolute;
-  top: 45.625rem; /* Posição em relação ao topo do elemento pai */
-  left: 30rem; /* Posição em relação à esquerda do elemento pai */
+  top: 45em; /* Posição em relação ao topo do elemento pai */
+/* Posição em relação à esquerda do elemento pai */
   border: solid #F5E2DC 1px;
   width: 167px;
   height: 120px;
@@ -38,7 +38,6 @@ export const Button = styled.button`
   background-color: white;
   color: #000000;
   cursor: pointer;
-
   font-family: Roboto;
   font-size: 20px;
   font-weight: 300;
@@ -53,6 +52,6 @@ export const ContainerButtonFlex = styled.div `
     align-items: center;
     justify-content: start;
     padding: 10px;
-    gap: 10px
+    gap: 10px;
 
 `;
