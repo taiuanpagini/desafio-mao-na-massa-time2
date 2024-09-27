@@ -24,7 +24,7 @@ const Body: React.FC<IProps> = ({ isLoading }) => {
 
     const isUrl = (item: IResponse) => {
         console.log(item?.card_url)
-        return item?.card_url && item?.card_url?.length > 0 ? <ButtonCard onClick={() => redirectUrlCard(item.card_url || '')}>Clique aqui para ver!</ButtonCard> : ``;
+        return item?.card_url && item?.card_url?.length > 0 ? <ButtonCard onClick={() => redirectUrlCard(item.card_url || '')}>Acessar o card</ButtonCard> : ``;
     }
 
     const render = (item: IResponse, index: number) => {

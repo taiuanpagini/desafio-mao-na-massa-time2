@@ -11,6 +11,24 @@ export const Container = styled.div `
     display: flex;
     flex-direction: column-reverse;
     overflow-y: auto;
+
+    scrollbar-width: thin;
+    scrollbar-color: #F5E2DC #ffffff;
+
+	&::-webkit-scrollbar {
+		width: 0.75rem;
+	}
+
+	&::-webkit-scrollbar-track {
+		background: #ffffff;
+        
+	}
+
+	&::-webkit-scrollbar-thumb {
+		background-color: #B3B3B3;
+		border-radius: 0.625rem;
+		border: 0.188rem solid #ffffff;
+	}
     
 `;
 
@@ -23,13 +41,13 @@ export const DivInput = styled.div `
 
 export const ButtonCard = styled.button`
     background-color: #FFDEF6;
-    width: 180px;
-    height: 50px;
+    width: 120px;
+    height: 30px;
     cursor: pointer;
     border-radius: 8px;
 
     font-family: Roboto;
-    font-size: 16px;
+    font-size: 14px;
     line-height: 18.96px;
 
     &:hover {
