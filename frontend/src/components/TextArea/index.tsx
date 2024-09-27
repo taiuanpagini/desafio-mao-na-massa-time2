@@ -8,15 +8,11 @@ import { ChatService } from "../../services/chatService";
 import { useMessageContext } from "../../Context/MessageContextProvider";
 import ModalAttachment from "../modalAttachment";
 
-interface IProps {
-    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-}
 
-const TextArea: React.FC<IProps> = ({ setIsLoading}) => {
+const TextArea: React.FC = () => {
     const [inputText, setInputText] = useState<string>('');
     const [openModal, setOpenModal] = useState<boolean>(false);
     const [isRecording, setIsRecording] = useState<boolean>(false);
-    const [audioUrl, setAudioUrl] = useState<string | null>(null);
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
 
@@ -36,12 +32,9 @@ const TextArea: React.FC<IProps> = ({ setIsLoading}) => {
 
     const submitMessage = async (message: string) => {
         await chatService.createCardMessage(message).then((response) => {
-            setIsLoading(true);
             updateMessageList(response?.data.author || true, response?.data.message || "Error backend", "text", response?.data.card_url);
         }).catch((error) => {
             console.log(error);
-        }).finally(() => {
-            setIsLoading(false);
         });
 
         return;
@@ -66,7 +59,6 @@ const TextArea: React.FC<IProps> = ({ setIsLoading}) => {
                 mediaRecorder.onstop = () => {
                     const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav'});
                     const audioUrl = URL.createObjectURL(audioBlob);
-                    setAudioUrl(audioUrl);
                     updateMessageList(false, audioUrl, "audio");
                     setInputText('')
                     sendChunkToAPI(audioBlob);

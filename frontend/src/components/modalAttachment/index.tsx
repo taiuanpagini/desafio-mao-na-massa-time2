@@ -22,15 +22,10 @@ const ModalAttachment: React.FC<IProps> = ({ setOpenModal }) => {
   };
 
   const handleImageButtonClick = () => {
-    if (imageInputRef.current) {
-      imageInputRef.current.click();
-    }
-  };
-
-  const handleBtn1Click = () => {
-      alert('sem funcionar');
+      if (imageInputRef.current) {
+        imageInputRef.current.click();
+      }
     };
-
 
     const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
       const fileData = event.target.files?.[0];

@@ -1,13 +1,10 @@
-import React, { useEffect, useMemo, useRef } from "react";
+import React from "react";
 import { ButtonCard, Container, DivInput, ImageButtonFront, ImageFront, MessageBackend, MessageFront } from "./style";
 import { IResponse } from "../../models/chatModel";
 import { useMessageContext } from "../../Context/MessageContextProvider";
 
-interface IProps {
-    isLoading: boolean;
-}
 
-const Body: React.FC<IProps> = ({ isLoading }) => {
+const Body: React.FC = () => {
     const { messageList } = useMessageContext();
 
     const redirectImage = (url: string) => {
