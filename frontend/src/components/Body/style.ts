@@ -40,7 +40,8 @@ export const DivInput = styled.div `
 `;
 
 export const ButtonCard = styled.button`
-    background-color: #FFDEF6;
+    background-color: #D2006F;
+    color: white;
     width: 120px;
     height: 30px;
     cursor: pointer;
