@@ -19,8 +19,9 @@ Um chatbot para criar cards no Trello.
 - ReactJS
 - FastApi
 - Python
-- Llama - Meta
+- OpenAI
 - VS Code
+- Azure
 
 ## 🚀 Como executar
 
@@ -35,15 +36,15 @@ Para iniciá-lo, siga os passos abaixo:
 
 ```bash
 # Instalar as dependências
-$ yarn
-$ pip install fastapi uvicorn requests transformers torch torchvision torchaudio
+$ yarn install # Pasta ./frontend
+$ pip install fastapi requests transformers torch torchvision torchaudio pandas azure-storage-blob azure-identity
 
 # Iniciar o projeto
-$ yarn dev
-$ uvicorn principal-llama:app --reload # Executar na pasta ./backend
+$ yarn dev # Executar na pasta ./frontend
+$ fastapi dev principal.py # Executar na pasta ./backend
 ```
 
-O app estará disponível no seu browser pelo endereço http://localhost:3000.
+O app estará disponível no seu browser pelo endereço http://localhost:5173/.
 
 ---
 

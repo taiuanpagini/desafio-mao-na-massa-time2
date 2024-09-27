@@ -206,7 +206,8 @@ async def chat_image(file: UploadFile = File(...)):
                 img.thumbnail((512, 512))
                 img.save(temp_file_path)
 
-        container_name = "portal/mao-na-massa"
+        container_name = os.getenv("CONTAINER_NAME")
+        app_name = os.getenv("APP_NAME")
         connection_string = os.getenv("BLOB_CONNECTION_STRING")
 
         blob = BlobClient.from_connection_string(conn_str=connection_string, container_name=container_name,
@@ -215,7 +216,7 @@ async def chat_image(file: UploadFile = File(...)):
         with open(temp_file_path, "rb") as file:
             blob.upload_blob(file)
 
-        image_url = f"https://portalfunctionsdevqa.blob.core.windows.net/{container_name}/{temp_file_path}"
+        image_url = f"https://{app_name}.blob.core.windows.net/{container_name}/{temp_file_path}"
 
         os.remove(temp_file_path)
 
