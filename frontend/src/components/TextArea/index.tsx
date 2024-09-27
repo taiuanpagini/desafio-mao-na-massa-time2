@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { Container, ContainerInput, Mic, Plus, TextInput } from "./style";
+import { Container, ContainerInput, DivInput, Mic, Plus, TextInput } from "./style";
 import mic from "../../assets/mic.svg";
 import notMic from "../../assets/notMic.svg";
 import plus from "../../assets/plus.svg";
@@ -124,15 +124,17 @@ const TextArea: React.FC<IProps> = ({ setIsLoading}) => {
     return(
         <Container>
             <ContainerInput>
-                <div>{openModal && <ModalAttachment setOpenModal={setOpenModal} />}</div>
-            <Plus src={openModal ? notPlus : plus} onClick={() => handleOpenModal()}/>
+                <DivInput>
+                    {openModal && <ModalAttachment setOpenModal={setOpenModal} />}
+                    <Plus openModal={openModal} src={openModal ? notPlus : plus} onClick={() => handleOpenModal()}/>
+                </DivInput>
             <TextInput type="text"
                 value={isRecording ? "Gravando......" : inputText}
                 onChange={(e) => !isRecording && setInputText(e.target.value)}
                 onKeyUp={handleKeyPress}
                 placeholder='Digite uma mensagem'
                 />
-            <Mic src={isRecording ? notMic : mic} onClick={() => handleOpenMic()}/>
+            <Mic isRecord={isRecording} src={isRecording ? notMic : mic} onClick={() => handleOpenMic()}/>
             </ContainerInput>
         </Container>
     );
