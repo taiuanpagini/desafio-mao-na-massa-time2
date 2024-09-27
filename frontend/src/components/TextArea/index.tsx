@@ -45,6 +45,7 @@ const TextArea: React.FC = () => {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 const mediaRecorder = new MediaRecorder(stream);
+                let timeoutId: any;
 
                 // mediaRecorder.ondataavailable = handleDataAvailable;
                 // mediaRecorder.onstop = handleStop;
@@ -63,9 +64,16 @@ const TextArea: React.FC = () => {
                     setInputText('')
                     sendChunkToAPI(audioBlob);
                     audioChunksRef.current = [];
+                    clearTimeout(timeoutId);
                 }
 
                 setIsRecording(true);
+                timeoutId = setTimeout(() => {
+                    if(mediaRecorderRef.current && isRecording) {
+                        mediaRecorderRef.current.stop();
+                        setIsRecording(false);
+                    }
+                }, 30000);
             } catch (err) {
                 console.error('Error accessing audio devices:', err);
             }
