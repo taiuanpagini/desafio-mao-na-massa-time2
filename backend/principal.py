@@ -8,6 +8,7 @@ from datetime import datetime, timedelta
 import os
 import json
 from PIL import Image
+from azure.storage.blob import BlobClient
 
 from pydantic import BaseModel
 
@@ -190,7 +191,8 @@ async def chat_image(file: UploadFile = File(...)):
     try:
         image_bytes = await file.read()
 
-        temp_file_path = "temp_image.jpeg"
+        temp_file_path = f"temp_{file.filename}"
+
         with open(temp_file_path, "wb") as temp_file:
             temp_file.write(image_bytes)
 
@@ -199,13 +201,22 @@ async def chat_image(file: UploadFile = File(...)):
                 img.thumbnail((512, 512))
                 img.save(temp_file_path)
 
-        # Código para subir a imagem em alguma plataforma e utilizar a url
+        container_name = "portal/mao-na-massa"
+        connection_string = os.getenv("BLOB_CONNECTION_STRING")
 
-        image_url = "https://i.pinimg.com/564x/1c/6e/b3/1c6eb31fae8ada28e6823aef8c39549c.jpg"
+        blob = BlobClient.from_connection_string(conn_str=connection_string, container_name=container_name,
+                                                 blob_name=temp_file_path)
+
+        with open(temp_file_path, "rb") as file:
+            blob.upload_blob(file)
+
+        image_url = f"https://portalfunctionsdevqa.blob.core.windows.net/{container_name}/{temp_file_path}"
 
         os.remove(temp_file_path)
 
         response = comment_on_image(image_url)
+
+        blob.delete_blob()
 
         return {"message": response, "author": True}
     except Exception as e:
