@@ -1,18 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import TextArea from "../../components/TextArea";
 import { Container, ContainerBackground } from "./style";
 import Body from "../../components/Body";
 import Header from "../../components/Header";
 
-const ChatPage = () => {
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-
+const ChatPage: React.FC = () => {
     return(
         <Container>
             <ContainerBackground>
                 <Header/>
-                <Body isLoading={isLoading}/>
-                <TextArea setIsLoading={setIsLoading} />
+                <Body />
+                <TextArea />
             </ContainerBackground>
             <></>
         </Container>
