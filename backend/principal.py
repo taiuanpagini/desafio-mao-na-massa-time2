@@ -167,7 +167,7 @@ async def chat_audio(file: UploadFile = File(...)):
     if "titulo" in transcript['text'] or "título" in transcript['text'] or "descrição" in transcript[
         'text'] or "descricao" in transcript['text']:
         response = ask_gpt(
-            "transforme em json formatado com title e description na raiz do objeto ignorando palavra card " +
+            "Extraia o título e descrição da frase e transforme em json formatado com title e description na raiz do objeto ignorando palavra card: " +
             transcript['text'])
         card_info = extract_card_info(response)
 
@@ -218,6 +218,20 @@ async def chat_image(file: UploadFile = File(...)):
 
         blob.delete_blob()
 
-        return {"message": response, "author": True}
+        if "card" in response or "trello" in response:
+            response = ask_gpt(
+                "Extraia o título e descrição da frase e transforme em json formatado com title e description na raiz do objeto ignorando palavra card: " +
+                response)
+            card_info = extract_card_info(response)
+
+            if card_info:
+                result = await create_trello_card(response)
+                return {**result, "author": True, "response": response}
+
+            return {
+                "message": "Não foi possível entender sua mensagem. Tente por exemplo: Criar um card com titulo Minha task e descrição Minha primeira task",
+                "author": True, "response": response}
+        else:
+            return {"message": response, "author": True}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
