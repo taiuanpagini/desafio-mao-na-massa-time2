@@ -42,12 +42,13 @@ const ModalAttachment: React.FC<IProps> = ({ setOpenModal }) => {
         const audioUrl = URL.createObjectURL(audioBlob);
         updateMessageList(false, audioUrl, "audio");
 
+        setOpenModal(false);
+
         await chatService.createCardAudio(formData).then((response) => {
           updateMessageList(response?.data.author || true, response?.data.message || "Error backend", "text", response?.data.card_url);
         })
       }
 
-      setOpenModal(false);
     };
 
     const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,12 +61,12 @@ const ModalAttachment: React.FC<IProps> = ({ setOpenModal }) => {
         const imageUrl = URL.createObjectURL(imageBlob);
         updateMessageList(false, imageUrl, "image");
 
+        setOpenModal(false);
+
         await chatService.createCardImage(formData).then((response) => {
           updateMessageList(response?.data.author || true, response?.data.message || "Error backend", "text", response?.data.card_url);
         })
       }
-
-      setOpenModal(false);
     };
 
    return (
