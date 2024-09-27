@@ -12,7 +12,7 @@ export const Container = styled.div `
     flex-direction: column-reverse;
     overflow-y: auto;
 
-    scrollbar-width: thin;
+    scrollbar-width: none;
     scrollbar-color: #F5E2DC #ffffff;
 
 	&::-webkit-scrollbar {
