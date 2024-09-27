@@ -52,10 +52,6 @@ export const ButtonCard = styled.button`
     font-size: 14px;
     line-height: 18.96px;
 
-    &:hover {
-        background-color: #FFFFFF;
-    }
-
 `;
 
 export const MessageBackend = styled.div `
