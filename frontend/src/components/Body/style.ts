@@ -45,3 +45,7 @@ export const ImageFront = styled.img `
     width: 200px;
 
 `;
+
+export const ImageButtonFront = styled.button `
+    cursor: pointer;
+`
