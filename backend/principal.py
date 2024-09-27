@@ -69,7 +69,7 @@ def comment_on_image(image_url):
                         },
                     },
                 ],
-             }
+            }
         ],
         max_tokens=300,
     )
@@ -112,7 +112,12 @@ async def create_trello_card(card_info_str):
     trello_response = requests.post(url, params=query)
 
     if trello_response.status_code == 200:
-        return {"message": "Card criado com sucesso no Trello!", "card_info": card_info}
+        response = trello_response.json()
+
+        card_url = response.get('shortUrl')
+
+        return {"message": "Card criado com sucesso no Trello!", "card_info": card_info,
+                "card_url": card_url}
     else:
         raise HTTPException(status_code=trello_response.status_code, detail="Erro ao criar card no Trello")
 
