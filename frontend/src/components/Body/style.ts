@@ -46,6 +46,7 @@ export const ButtonCard = styled.button`
     height: 30px;
     cursor: pointer;
     border-radius: 8px;
+    border: none;
 
     font-family: Roboto;
     font-size: 14px;
